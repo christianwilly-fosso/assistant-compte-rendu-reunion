@@ -186,7 +186,7 @@ def _build_interface(pipeline: MeetingPipeline, settings: Settings) -> gr.Blocks
     if settings.gemini_enabled:
         summary_modes.append(SUMMARY_MODE_GEMINI)
 
-    with gr.Blocks(title="Assistant Compte Rendu Réunion", theme=gr.themes.Soft()) as demo:
+    with gr.Blocks(title="Assistant Compte Rendu Réunion") as demo:
         gr.Markdown("# 📝 Assistant Compte Rendu Réunion")
         gr.Markdown(
             "Téléversez un audio de réunion pour générer une transcription et un compte rendu structuré. "
@@ -218,9 +218,9 @@ def _build_interface(pipeline: MeetingPipeline, settings: Settings) -> gr.Blocks
         with gr.Tab("📋 Compte rendu"):
             report_view = gr.Markdown(label="Compte rendu")
         with gr.Tab("💬 Version WhatsApp"):
-            whatsapp_view = gr.Textbox(label="À copier/coller dans WhatsApp", lines=12, show_copy_button=True)
+            whatsapp_view = gr.Textbox(label="À copier/coller dans WhatsApp", lines=12)
         with gr.Tab("📝 Transcription"):
-            transcription_view = gr.Textbox(label="Transcription complète", lines=16, show_copy_button=True)
+            transcription_view = gr.Textbox(label="Transcription complète", lines=16)
 
         gr.Markdown("### 📥 Téléchargements")
         with gr.Row():
