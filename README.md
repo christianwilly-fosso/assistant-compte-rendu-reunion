@@ -16,16 +16,20 @@ un compte rendu structuré (résumé, décisions, actions, points en suspens), p
 être partagé en **PDF**, **Word**, **texte** ou **Markdown**, ainsi qu'une
 version courte optimisée pour **WhatsApp**.
 
-L'application fonctionne **sans aucune clé API**. Une clé Gemini facultative peut
-être configurée pour améliorer la qualité du résumé.
+L'application fonctionne **sans aucune clé API**. Une clé Groq ou Gemini facultative
+peut être configurée pour améliorer la qualité et la vitesse.
 
 ## ✨ Fonctionnalités
 
 - Upload de fichier audio (`.m4a`, `.mp3`, `.ogg`, `.wav`, `.webm`, `.flac`, `.aac`).
 - Conversion audio automatique vers WAV mono 16 kHz via FFmpeg.
-- Transcription locale via [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (CPU, modèles `tiny`, `base`, `small`).
-- Résumé algorithmique en français (gratuit, sans API).
-- Résumé optionnel via Gemini API (si `GEMINI_API_KEY` est configurée).
+- **Transcription** : 3 moteurs disponibles (auto-sélectionnés selon la configuration)
+  - 🚀 **Groq Whisper Large V3** — cloud, ~50× plus rapide, meilleure qualité (si `GROQ_API_KEY`).
+  - 💻 **faster-whisper local** — CPU, modèles `tiny`, `base`, `small` (par défaut, sans API).
+- **Résumé** : 3 modes disponibles
+  - 🧠 **Groq Llama 3.3 70B** — gratuit, qualité élevée (si `GROQ_API_KEY`).
+  - 🤖 **Gemini** — alternative cloud (si `GEMINI_API_KEY`).
+  - 🔧 **Heuristique** — regex/scoring TF, fonctionne hors-ligne.
 - Export PDF, DOCX, TXT, Markdown.
 - Version courte prête à partager sur WhatsApp.
 - Interface mobile-friendly.
@@ -67,7 +71,8 @@ docker run -p 7860:7860 meeting-report-assistant
 1. Créer un compte sur <https://huggingface.co/>.
 2. Créer un nouveau **Space** avec **SDK = Docker**.
 3. Pousser ce dépôt vers le remote du Space.
-4. (Optionnel) Ajouter le secret `GEMINI_API_KEY` dans les paramètres du Space pour activer le mode IA.
+4. (Optionnel mais recommandé) Ajouter le secret `GROQ_API_KEY` dans les paramètres du Space pour activer la transcription rapide + le résumé IA. Obtention gratuite : <https://console.groq.com/keys>.
+5. (Optionnel) Alternative : `GEMINI_API_KEY` pour utiliser Gemini comme moteur de résumé.
 
 Le `README.md` (ce fichier) contient déjà les métadonnées YAML attendues par Hugging Face Spaces.
 
@@ -81,7 +86,10 @@ Voir [`.env.example`](.env.example). Toutes les variables sont optionnelles.
 | `WHISPER_DEVICE` | `cpu` | Device d'inférence. |
 | `WHISPER_COMPUTE_TYPE` | `int8` | Précision de calcul. |
 | `MAX_AUDIO_SIZE_MB` | `100` | Taille maximale du fichier uploadé. |
-| `SUMMARY_MODE` | `auto` | `auto`, `heuristic`, `gemini`. |
+| `SUMMARY_MODE` | `auto` | `auto`, `heuristic`, `groq`, `gemini`. |
+| `GROQ_API_KEY` | _vide_ | Active Groq (transcription + résumé) si renseignée. |
+| `GROQ_CHAT_MODEL` | `llama-3.3-70b-versatile` | Modèle Groq pour le résumé. |
+| `GROQ_WHISPER_MODEL` | `whisper-large-v3` | Modèle Groq pour la transcription. |
 | `GEMINI_API_KEY` | _vide_ | Active Gemini si renseignée. |
 | `GEMINI_MODEL` | `gemini-1.5-flash` | Modèle Gemini utilisé. |
 

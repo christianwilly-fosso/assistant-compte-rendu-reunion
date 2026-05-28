@@ -20,6 +20,8 @@ DEFAULT_MAX_AUDIO_SIZE_MB = 100
 DEFAULT_SUPPORTED_EXTENSIONS = (".m4a", ".mp3", ".ogg", ".wav", ".webm", ".flac", ".aac")
 DEFAULT_SUMMARY_MODE = "auto"
 DEFAULT_GEMINI_MODEL = "gemini-1.5-flash"
+DEFAULT_GROQ_CHAT_MODEL = "llama-3.3-70b-versatile"
+DEFAULT_GROQ_WHISPER_MODEL = "whisper-large-v3"
 
 
 def _read_int(name: str, default: int) -> int:
@@ -49,6 +51,9 @@ class Settings:
     summary_mode: str = DEFAULT_SUMMARY_MODE
     gemini_api_key: str | None = None
     gemini_model: str = DEFAULT_GEMINI_MODEL
+    groq_api_key: str | None = None
+    groq_chat_model: str = DEFAULT_GROQ_CHAT_MODEL
+    groq_whisper_model: str = DEFAULT_GROQ_WHISPER_MODEL
 
     @classmethod
     def load(cls) -> "Settings":
@@ -63,11 +68,18 @@ class Settings:
             summary_mode=os.getenv("SUMMARY_MODE", DEFAULT_SUMMARY_MODE),
             gemini_api_key=_clean(os.getenv("GEMINI_API_KEY")),
             gemini_model=os.getenv("GEMINI_MODEL", DEFAULT_GEMINI_MODEL),
+            groq_api_key=_clean(os.getenv("GROQ_API_KEY")),
+            groq_chat_model=os.getenv("GROQ_CHAT_MODEL", DEFAULT_GROQ_CHAT_MODEL),
+            groq_whisper_model=os.getenv("GROQ_WHISPER_MODEL", DEFAULT_GROQ_WHISPER_MODEL),
         )
 
     @property
     def gemini_enabled(self) -> bool:
         return bool(self.gemini_api_key)
+
+    @property
+    def groq_enabled(self) -> bool:
+        return bool(self.groq_api_key)
 
 
 def _clean(value: str | None) -> str | None:
